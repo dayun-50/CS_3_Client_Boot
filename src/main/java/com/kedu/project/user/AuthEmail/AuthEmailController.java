@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kedu.project.user.UserDTO;
 
 @RestController
-@RequestMapping("/emailAuth")
+@RequestMapping("/emailCheck")
 public class AuthEmailController {
     @Autowired
 	private AuthEmailService authEmailService;

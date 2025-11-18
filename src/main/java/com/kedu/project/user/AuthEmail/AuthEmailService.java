@@ -72,7 +72,7 @@ public class AuthEmailService {
         MimeMessage message = new MimeMessage(session);
         message.setFrom(new InternetAddress(fromEmail));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-        message.setSubject("CS 그룹웨어 이메일 인증 확인", "UTF-8");
+        message.setSubject("CS BabyCmunity 이메일 인증 확인", "UTF-8");
         message.setContent(htmlContent, "text/html; charset=UTF-8");
 
         // 메일 발송

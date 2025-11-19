@@ -28,10 +28,10 @@ public class JWTUtil {
 		this.jwt = JWT.require(algorithm).build();
 	}
 
-	public String createToken(String id, List<String> roles) {
+	public String createToken(String id, List<Integer> babySeqList) {
 		return JWT.create()// 토큰생성하겟음()
 				.withSubject(id)// 대표적으로쓸데이터()
-				// .withClaim("roles", roles)
+				.withClaim("babySeqList", babySeqList)
 				.withIssuedAt(new Date(System.currentTimeMillis())) // 토큰생성일(현재일자)
 				.withExpiresAt(new Date(System.currentTimeMillis() + exp))// 토큰만료일(종료일)
 				.sign(this.algorithm);// 이 알고리즘을 사용해서 암호값을 이음

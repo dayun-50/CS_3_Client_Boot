@@ -3,10 +3,36 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test9">
+<mapper namespace="user">
 
-    <select id="test9" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
+    <select id="idChack" resultType="int">
+        SELECT count(*) from user where user_id = #{user_id}
+    </select>
+
+    <select id="nickNameChack" resultType="int">
+        SELECT count(*) from user where nickname = #{nickname}
+    </select>
+
+    <insert id="signup">
+        insert user values (#{user_id}, #{email}, #{password}, #{contact},
+        #{nickname}, #{parent_role}, #{birth_date}, #{family_code},
+        NOW(), 0)
+    </insert>
+
+    <select id="login" resultType="String">
+        SELECT last_baby from user where user_id = #{user_id} and password = #{password}
+    </select>
+
+    <select id="pindIdByEmail" resultType="String">
+        SELECT user_id from user where email = #{email}
+    </select>
+
+    <select id="userDataById" resultType="com.kedu.project.user.UserDTO">
+        SELECT * from user where user_id = #{user_id}
+    </select>
+
+    <select id="familyCodeChack" resultType="com.kedu.project.user.UserDTO">
+        SELECT family_code from user where family_code = #{family_code}
     </select>
 
 </mapper>

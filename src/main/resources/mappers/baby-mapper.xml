@@ -3,10 +3,10 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test">
+<mapper namespace="baby">
 
-    <select id="test" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
+    <select id="getBabySeqList" resultType="int">
+        SELECT baby_seq FROM baby where family_code = #{family_code}
     </select>
 
 </mapper>

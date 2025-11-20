@@ -13,25 +13,6 @@ public class GrowthChartDAO {
     
     private static String NAMESPACE = "chart";
     
-    
- // FETAL 조회
-    public List<GrowthChartDTO> getFetalGrowthList(int babySeq) {
-        return mybatis.selectList(NAMESPACE + ".getFetalGrowthList", babySeq);
-    }
 
-    // INFANT 조회
-    public List<GrowthChartDTO> getInfantGrowthList(int babySeq) {
-        return mybatis.selectList(NAMESPACE + ".getInfantGrowthList", babySeq);
-    }
-
-    // INSERT
-    public int insertGrowth(GrowthChartDTO dto) {
-        return mybatis.insert(NAMESPACE + ".insertGrowth", dto);
-    }
-
-    // UPDATE
-    public int updateGrowth(GrowthChartDTO dto) {
-        return mybatis.update(NAMESPACE + ".updateGrowth", dto);
-    }
     
 }

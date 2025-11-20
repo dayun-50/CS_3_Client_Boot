@@ -1,6 +1,6 @@
 package com.kedu.project.growth_chart;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

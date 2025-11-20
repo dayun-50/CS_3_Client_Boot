@@ -17,8 +17,12 @@ public class BabyDAO {
         return mybatis.selectList("baby.getBabySeqList", dto);
     }
 
-    public BabyDTO babyMypage(BabyDTO dto){
+    public BabyDTO babyMypage(BabyDTO dto) {
         return mybatis.selectOne("baby.babyMypage", dto);
+    }
+
+    public int babyInsert(BabyDTO dto) {
+        return mybatis.insert("baby.babyInsert", dto);
     }
 
 }

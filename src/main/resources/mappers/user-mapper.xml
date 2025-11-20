@@ -35,4 +35,8 @@
         SELECT count(*) from user where family_code = #{family_code}
     </select>
 
+    <update id="pindPwByEmail">
+        update user set password = #{password} where email = #{email}
+    </update>
+
 </mapper>

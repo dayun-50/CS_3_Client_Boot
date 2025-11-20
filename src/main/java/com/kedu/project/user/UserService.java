@@ -63,6 +63,11 @@ public class UserService {
         return dao.pindIdByEmail(dto);
     }
 
+    public int pindPwByEmail(UserDTO dto) {
+        dto.setPassword(EncryptionUtil.encrypt(dto.getPassword()));
+        return dao.pindPwByEmail(dto);
+    }
+
     public String familyCodeMake() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
@@ -77,7 +82,7 @@ public class UserService {
                 result.append(characters.charAt(index));
             }
             int exists = dao.familyCodeChack(result.toString());
-            if(exists==0){
+            if (exists == 0) {
                 return result.toString();
             }
         }

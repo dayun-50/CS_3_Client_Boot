@@ -71,6 +71,11 @@ public class UserController {
     public ResponseEntity<List<BabyDTO>> babyListByMypage(@AuthenticationPrincipal String id) {
         return ResponseEntity.ok(userService.babyListByMypage(id));
     }
-    
+
+    @PostMapping("/changeBaby")
+    public ResponseEntity<Integer> changeBaby(@RequestBody UserDTO dto, @AuthenticationPrincipal String id) {
+        dto.setUser_id(id);
+        return ResponseEntity.ok(userService.changeBaby(dto));
+    }
 
 }

@@ -6,10 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.servlet.http.HttpServletRequest;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,9 +18,10 @@ public class BabyController {
     @Autowired
     private BabyService babyService;
 
-    @PostMapping("/babyMypage")
-    public ResponseEntity<BabyDTO> babyMypage(@RequestBody BabyDTO dto, @AuthenticationPrincipal String id) {
-        return ResponseEntity.ok(babyService.babyMypage(dto, id));
+    @GetMapping("/babyMypage")
+    public ResponseEntity<BabyDTO> babyMypage(@RequestParam("baby_seq") int babySeq, @AuthenticationPrincipal String id) {
+        System.out.println(id);System.out.println(babySeq);
+        return ResponseEntity.ok(babyService.babyMypage(babySeq, id));
     }
 
     @PostMapping("/insert")

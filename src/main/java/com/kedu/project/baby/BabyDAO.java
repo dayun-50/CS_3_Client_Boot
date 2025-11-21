@@ -30,5 +30,10 @@ public class BabyDAO {
     	return mybatis.selectOne("baby.selectBabyInfo", babySeq);
     }
     
-    
+   
+    public List<BabyDTO> babyListByMypage(String family_code){
+        return mybatis.selectList("baby.babyListByMypage", family_code);
+    }
+
+
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kedu.project.baby.BabyDAO;
+import com.kedu.project.baby.BabyDTO;
 import com.kedu.project.security.crypto.EncryptionUtil;
 import com.kedu.project.security.jwt.JWTUtil;
 
@@ -48,9 +49,7 @@ public class UserService {
         // 애기 시퀀스 ( return용 )
         String babySeq = String.valueOf(user.getLast_baby());
         System.out.println(babySeq);
-        // 유저의 애기 시퀀스 리스트
-        List<Integer> babySeqList = babydao.getBabySeqList(user);
-        String token = jwt.createToken(dto.getUser_id(), babySeqList);
+        String token = jwt.createToken(dto.getUser_id());
 
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
@@ -66,6 +65,21 @@ public class UserService {
     public int pindPwByEmail(UserDTO dto) {
         dto.setPassword(EncryptionUtil.encrypt(dto.getPassword()));
         return dao.pindPwByEmail(dto);
+    }
+
+    public UserDTO mypage(String id) {
+        UserDTO dto = new UserDTO();
+        dto.setUser_id(id);
+        return dao.userDataById(dto);
+    }
+
+    public int mypageUdate(UserDTO dto){
+        return dao.mypageUdate(dto);
+    }
+
+    public List<BabyDTO> babyListByMypage(String id){
+        String familyCode = dao.familyCode(id);
+        return babydao.babyListByMypage(familyCode);
     }
 
     public String familyCodeMake() {

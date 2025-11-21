@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kedu.project.growth_chart.GrowthChartDAO;
 import com.kedu.project.user.UserDAO;
 
 @Service
@@ -17,10 +18,19 @@ public class BabyService {
     @Autowired
     private UserDAO userdao;
 
-    public BabyDTO babyMypage(BabyDTO dto, String id) {
+    @Autowired
+    private GrowthChartDAO growthChartdao;
+
+    public BabyDTO babyMypage(int babySeq, String id) {
+        BabyDTO dto = new BabyDTO();
+        dto.setBaby_seq(babySeq);
         String parentsData = userdao.familyCode(id);
         dto.setFamily_code(parentsData);
-        return dao.babyMypage(dto);
+        System.out.println(dto);
+        String weight = growthChartdao.getWeightByBabypage(babySeq);
+        dto = dao.babyMypage(dto);
+        dto.setFamily_code(weight);
+        return dto;
     }
 
 
@@ -42,12 +52,14 @@ public class BabyService {
                 baby.setStatus("fetus");
             }
             System.out.println(baby);
-            int babySeq = dao.babyInsert(baby);
+            dao.babyInsert(baby);
+            int generatedSeq = baby.getBaby_seq();
             if (index == 0) {
-                firstBaby = babySeq;
+                firstBaby = generatedSeq;
             }
             index++;
         }
+        userdao.updateLastBabySeq(firstBaby, id);
         return firstBaby;
 
     }

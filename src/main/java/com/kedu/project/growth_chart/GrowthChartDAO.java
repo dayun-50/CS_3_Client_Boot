@@ -19,7 +19,7 @@ public class GrowthChartDAO {
         // 매퍼 ID: chart.selectLatestMeasurements
         return mybatis.selectList(NAMESPACE + ".selectLatestMeasurements", params);
 
-
+    }
     // 혜빈 - 베이비 페이지 몸무게 출력
     public String getWeightByBabypage(int baby_seq){
         return mybatis.selectOne("chart.getWeightByBabypage", baby_seq);

@@ -1,8 +1,10 @@
 package com.kedu.project.growth_chart;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +24,10 @@ public class GrowthChartController {
 
 	@Autowired
 	private BabyService babyService;
-
+	
+	
+	//baby info 조회
+	
 	@GetMapping("/{babySeq}")
 	public ResponseEntity<BabyDTO> getBabyInfoForChart(@PathVariable int babySeq) {
 		// BabyService를 호출하여 BabyDTO (status, birthDate) 반환
@@ -36,34 +41,36 @@ public class GrowthChartController {
 		return ResponseEntity.ok(babyInfo);
 	}
 
-	@GetMapping("/total") 
-	public ResponseEntity<Map<String, Object>> getTotalChartData(
-			@RequestParam int babyId
-			,@RequestParam int week
-			){
-		try {
-			// Service를 호출하여 babySeq 조회, 주차 계산, 해당 주차의 실측치 조회를 한 번에 수행합니다.
-			Map<String, Object> resultData = growthChartService.getTotalChart(babyId, week);
-
-			return ResponseEntity.ok(resultData);
-
-		} catch (Exception e) {
-			// 오류 발생 시 500 Internal Server Error 반환
-			return ResponseEntity.internalServerError().body(Map.of("error", e.getMessage()));
-		}
-	}
+	// total chart 데이터 조회
 	
-	@GetMapping("/history/{babySeq}")
-    public ResponseEntity<List<MeasurementGroupedResponse>> getHistoricalChartData(@PathVariable int babySeq) {
-        
-        try {
-            // Service를 호출하여 모든 기록을 조회하고 주차 계산 및 가공을 수행합니다.
-            List<MeasurementGroupedResponse> data = growthChartService.getAllHistoricalMeasurements(babySeq);
+	@GetMapping("/total") 
+	public ResponseEntity<Map<String, Float>> getTotalChartData(
+			@RequestParam("babyId") int babyId,
+	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+			{
+		try {
+            // Service 호출: 계산 로직 없이 바로 DAO에 필요한 데이터를 요청합니다.
+            Map<String, Float> actualDataMap = growthChartService.getActualDataByRange(babyId, startDate, endDate);
             
-            return ResponseEntity.ok(data);
+            return ResponseEntity.ok(actualDataMap);
+            
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(null);
         }
-    }
+	}
+	
+//	@GetMapping("/history/{babySeq}")
+//    public ResponseEntity<List<MeasurementGroupedResponse>> getHistoricalChartData(@PathVariable int babySeq) {
+//        
+//        try {
+//            // Service를 호출하여 모든 기록을 조회하고 주차 계산 및 가공을 수행합니다.
+//            List<MeasurementGroupedResponse> data = growthChartService.getAllHistoricalMeasurements(babySeq);
+//            
+//            return ResponseEntity.ok(data);
+//        } catch (Exception e) {
+//            return ResponseEntity.internalServerError().body(null);
+//        }
+//    }
 
 }

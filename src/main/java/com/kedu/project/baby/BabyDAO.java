@@ -25,4 +25,8 @@ public class BabyDAO {
         return mybatis.insert("baby.babyInsert", dto);
     }
 
+    public List<BabyDTO> babyListByMypage(String family_code){
+        return mybatis.selectList("baby.babyListByMypage", family_code);
+    }
+
 }

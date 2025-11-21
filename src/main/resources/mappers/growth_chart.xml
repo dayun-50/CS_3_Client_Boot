@@ -3,10 +3,12 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test6">
+<mapper namespace="chart">
 
-    <select id="test6" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
+    <!-- 혜빈 - 베이비 마이페이지 몸무게 출력 -->
+    <select id="getWeightByBabypage" resultType="String">
+        SELECT measure_value FROM growth_chart where baby_seq = #{baby_seq} 
+        and measure_type = 'EFW' order by measure_date desc limit 1
     </select>
 
 </mapper>

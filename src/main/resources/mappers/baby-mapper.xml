@@ -22,4 +22,8 @@
          #{status}, #{birth_date}, NOW())
     </insert>
 
+    <select id="babyListByMypage" resultType="com.kedu.project.baby.BabyDTO">
+        select * from baby where family_code = #{family_code} order by birth_date asc
+    </select>
+
 </mapper>

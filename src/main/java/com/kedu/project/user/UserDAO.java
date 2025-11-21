@@ -1,6 +1,5 @@
 package com.kedu.project.user;
 
-import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -52,5 +51,9 @@ public class UserDAO {
         return mybatis.update("user.updateLastBabySeq", Map.of(
                 "last_baby", last_baby,
                 "user_id", id));
+    }
+
+    public int mypageUdate(UserDTO dto) {
+        return mybatis.update("user.mypageUdate", dto);
     }
 }

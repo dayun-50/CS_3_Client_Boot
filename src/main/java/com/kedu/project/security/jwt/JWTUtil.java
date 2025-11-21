@@ -28,10 +28,10 @@ public class JWTUtil {
 		this.jwt = JWT.require(algorithm).build();
 	}
 
-	public String createToken(String id, List<Integer> babySeqList) {
+	public String createToken(String id) {
 		return JWT.create()// 토큰생성하겟음()
 				.withSubject(id)// 대표적으로쓸데이터()
-				.withClaim("babySeqList", babySeqList)
+				// .withClaim("babySeqList", babySeqList)
 				.withIssuedAt(new Date(System.currentTimeMillis())) // 토큰생성일(현재일자)
 				.withExpiresAt(new Date(System.currentTimeMillis() + exp))// 토큰만료일(종료일)
 				.sign(this.algorithm);// 이 알고리즘을 사용해서 암호값을 이음
@@ -61,9 +61,9 @@ public class JWTUtil {
 		return data.getSubject();
 	}
 
-	// withClaim 로 지정한 키값에 해당되는 value 값 뽑기 ( 현재 코드에선 roles로 권한 )
-	public List<Integer> getRolesFromToken(String token) {
-		DecodedJWT data = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
-		return data.getClaim("babySeqList").asList(Integer.class);
-	}    
+	// // withClaim 로 지정한 키값에 해당되는 value 값 뽑기 ( 현재 코드에선 roles로 권한 )
+	// public List<Integer> getRolesFromToken(String token) {
+	// 	DecodedJWT data = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+	// 	return data.getClaim("babySeqList").asList(Integer.class);
+	// }    
 }

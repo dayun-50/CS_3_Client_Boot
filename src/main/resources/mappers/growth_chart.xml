@@ -12,6 +12,46 @@
         and measure_type = 'EFW' order by measure_date desc limit 1
     </select>
 
+    <select id="selectLatestMeasurements" parameterType="Map" resultType="com.kedu.project.growth_chart.GrowthChartDTO">
+        SELECT 
+            growth_seq, 
+            baby_seq, 
+            user_id, 
+            measure_date, 
+            measure_type, 
+            measure_value
+        FROM 
+            growth_chart
+        WHERE 
+            baby_seq = #{baby_seq}
+        AND 
+            measure_date BETWEEN #{startDate} AND #{endDate}
+    </select>
     
+   
+    
+    <select id="countByBabyAndDate" parameterType="Map" resultType="int">
+        SELECT COUNT(*) 
+        FROM growth_chart
+        WHERE baby_seq = #{baby_seq} 
+        AND measure_date = #{measureDate} 
+        LIMIT 1;
+    </select>
+    
+    <insert id="insertMeasurement" parameterType="com.kedu.project.growth_chart.GrowthChartDTO">
+        INSERT INTO growth_chart (
+            baby_seq, 
+            user_id,
+            measure_date, 
+            measure_type, 
+            measure_value
+        ) VALUES (
+            #{baby_seq}, 
+            #{user_id},
+            #{measure_date}, 
+            #{measure_type}, 
+            #{measure_value}
+        )
+    </insert>
     
 </mapper>

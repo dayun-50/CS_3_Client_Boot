@@ -36,21 +36,14 @@ public class BabyService {
 
     public int babyInsert(List<BabyDTO> dto, String id) {
         System.out.println(id);
-        String parentsData = userdao.familyCode(id);
-        System.out.println("십새야"+parentsData);
+        String familyCode = userdao.familyCode(id);
+        System.out.println("십새야" + familyCode);
         int firstBaby = 0;
         int index = 0;
         for (BabyDTO baby : dto) {
-            baby.setFamily_code(parentsData);
-            LocalDate todayDate = LocalDate.now();
-            String birthDateString = baby.getBirth_date();
-            LocalDate birthDate = LocalDate.parse(birthDateString, DateTimeFormatter.ISO_LOCAL_DATE);
-            if (birthDate.isBefore(todayDate)) {
-                // 이 로직은 출생일이 오늘보다 과거일 경우(이미 태어났을 경우) 실행됩니다.
-                baby.setStatus("infant");
-            }else{
-                baby.setStatus("fetus");
-            }
+            baby.setFamily_code(familyCode);
+            String status = determineBabyStatus(baby.getBirth_date());
+            baby.setStatus(status);
             System.out.println(baby);
             dao.babyInsert(baby);
             int generatedSeq = baby.getBaby_seq();
@@ -63,6 +56,7 @@ public class BabyService {
         return firstBaby;
 
     }
+
     
     public BabyDTO getBabyInfo(int babySeq) {
         // DAO를 호출하여 DB에서 BabyDTO를 조회합니다.
@@ -77,6 +71,23 @@ public class BabyService {
         return babyInfo; 
     }
     
-    
-    
+    public int babypageUpdate(BabyDTO dto , String id){
+        String familyCode = userdao.familyCode(id);
+        dto.setFamily_code(familyCode);
+        String status = determineBabyStatus(dto.getBirth_date());
+        dto.setStatus(status);
+        return dao.babypageUpdate(dto);
+    }
+
+    public String determineBabyStatus(String date) {
+        LocalDate todayDate = LocalDate.now();
+        LocalDate birthDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        if (birthDate.isBefore(todayDate)) {
+            return "infant";
+        } else {
+            return "fetus";
+        }
+    }
+
+
 }

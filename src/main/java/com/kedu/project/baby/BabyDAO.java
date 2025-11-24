@@ -35,5 +35,8 @@ public class BabyDAO {
         return mybatis.selectList("baby.babyListByMypage", family_code);
     }
 
+    public int babypageUpdate(BabyDTO dto){
+        return mybatis.update("baby.babypageUpdate", dto);
+    }
 
 }

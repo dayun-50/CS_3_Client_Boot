@@ -82,6 +82,10 @@ public class UserService {
         return babydao.babyListByMypage(familyCode);
     }
 
+    public int changeBaby(UserDTO dto){
+        return dao.changeBaby(dto);
+    }
+
     public String familyCodeMake() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();

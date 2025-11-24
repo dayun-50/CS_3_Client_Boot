@@ -34,4 +34,9 @@
         select * from baby where family_code = #{family_code} order by birth_date asc
     </select>
 
+    <update id="babypageUpdate">
+        update baby set name = #{name}, gender = #{gender}, status = #{status}, birth_date = #{birth_date}, updated_at= NOW()
+        where family_code = #{family_code} and baby_seq = #{baby_seq}
+    </update>
+
 </mapper>

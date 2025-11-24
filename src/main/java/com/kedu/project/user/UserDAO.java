@@ -56,4 +56,8 @@ public class UserDAO {
     public int mypageUdate(UserDTO dto) {
         return mybatis.update("user.mypageUdate", dto);
     }
+
+    public int changeBaby(UserDTO dto){
+        return mybatis.update("user.changeBaby", dto);
+    }
 }

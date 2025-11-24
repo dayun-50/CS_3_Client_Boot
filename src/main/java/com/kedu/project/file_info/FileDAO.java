@@ -41,6 +41,29 @@ public class FileDAO {
     public String findOriNameBySysName(String sysname) {
 		return mybatis.selectOne("File.findOriNameBySysName", sysname);
 	}
-
     
+    //4. 타겟 시퀀스+ 타겟 타입으로 해당하는 파일 배열 가져오기
+    public List<FileDTO> getDetailBoardFile(Map<String, Object>params){
+    	return mybatis.selectList("File.getDetailBoardFile", params);
+    }
+    
+    
+    //5.부모 시퀀스에 따라서 딸려있는 첨부파일+이미지들 전부 가져오기
+    public List<FileDTO> getFilesByParent(Map<String, Object>params) {
+    	return mybatis.selectList("File.getFilesByParent", params);
+    }
+    //5-1.부모 시퀀스에 따라서 딸려있는 첨부파일+이미지들 전부 지우기
+    public int deleteAllFile(Map<String, Object>params) {
+    	return mybatis.delete("File.deleteAllFile", params);
+    }
+    
+    //6.created_at + target_seq 가 null인 파일 목록 가져오기
+    public List<FileDTO> getTempFiles(){
+    	return mybatis.selectList("File.getTempFiles");
+    }
+    
+    //7. sysname으로 삭제하기
+    public int deleteFileBySysname(String sysname) {
+    	return mybatis.delete("File.deleteFileBySysname",sysname);
+    }
 }

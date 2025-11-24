@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,10 +35,17 @@ public class FileService {
     
     //1. 보드 시퀀스로 썸네일 파일리스트 뽑아오기
     public List<FileDTO> getThumsFromTo (List<Integer> seqList) {
+    	System.out.println(seqList.get(0));
+    	System.out.println(seqList.getLast());
         if(seqList == null || seqList.isEmpty()) { 
             return List.of(); // 빈 배열이면 아예 DAO 호출 차단
         }
-        return dao.getThumsFromTo(seqList);
+        List<FileDTO> result =dao.getThumsFromTo(seqList);
+        for(FileDTO dto : result) {
+        	System.out.println("파일찾아오기"+dto.getFile_seq()+":"+dto.getTarget_seq());
+        }
+        
+         return result;
     }
     
     //2. 파일 인서트 : 파일데이터, 타겟 타입, 타겟 시퀀스, 유저 아이디
@@ -131,6 +139,7 @@ public class FileService {
     }
     //2-3. 썸네일 사진 저장
     public int saveThumbnail(MultipartFile file, String target_type, int target_seq, String user_id) {
+    	System.out.println("savThumbnail 서비스레이어 타겟 시퀀스 들어오는지"+target_seq);
         try {
             String oriname = file.getOriginalFilename();
             String sysname = UUID.randomUUID() + "_" + oriname;
@@ -148,6 +157,7 @@ public class FileService {
                     .sysname(sysname)
                     .user_id(user_id)
                     .target_type(target_type+"/thumb")
+                    .target_seq(target_seq)
                     .build();
 
             return dao.saveThumbnail(dto);
@@ -156,13 +166,15 @@ public class FileService {
         }
     } 
     
-    
-    
-    
     // 3. 파일 다운로드용 링크 받기 : 시스네임으로 구별
     public Map<String, Object> getFileStream(String sysname, String file_type) {
         Map<String, Object> result = new HashMap<>();
-        String objectPath = file_type + sysname;
+        
+        if (file_type.endsWith("/")) {
+            file_type = file_type.substring(0, file_type.length() - 1);
+        }
+
+        String objectPath = file_type + "/" + sysname;
         Blob blob = storage.get(bucketName, objectPath);
         if (blob == null) return null;
 
@@ -174,8 +186,69 @@ public class FileService {
         return result;
     }
     
-    
+    //4. 타겟 시퀀스+ 타겟 타입으로 해당하는 파일 배열 가져오기
+    public List<FileDTO> getDetailBoardFile(int target_seq, String target_type) {
+    	 Map<String, Object> params = new HashMap<>();
+    	 params.put("target_seq", target_seq);
+    	 params.put("target_type", target_type+"/file");
+    	 
+    	 return dao.getDetailBoardFile(params);
+    }
 
+    //5.부모 시퀀스에 따라서 딸려있느 첨부파일+이미지들 전부 지우기
+    public int deleteAllFile(int target_seq, String user_id, String target_type) {
+    	// 1. 파일이 없다면 리턴
+    	Map<String, Object> params1 = new HashMap<>();
+    	params1.put("target_seq", target_seq);
+    	params1.put("target_type", target_type);
+    	params1.put("user_id", user_id);
+    	List<FileDTO> files = dao.getFilesByParent(params1);
+        if (files == null || files.isEmpty()) return 0;
+        
+        // 2. GCS에서도 파일 삭제
+        for (FileDTO f : files) {
+            try {
+                String objectName = f.getTarget_type() + "/" + f.getSysname();
+                storage.delete(BlobId.of(bucketName, objectName));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    	
+        // 2. DB에서도 파일 삭제
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("target_seq", target_seq);
+    	params.put("user_id", user_id);
+    	
+    	return dao.deleteAllFile(params);
+    }
     
-    
+    //6. 새벽 4시마다 미리보기용 임시파일 db+gcs정리
+    @Scheduled (cron="0 49 09 * * *")
+    public void cleanUpTemp() {
+    	// 1. created_at + target_seq 가 null인 파일 목록 가져오기
+    	List<FileDTO> files =dao.getTempFiles();
+        if (files == null || files.isEmpty()) {
+            return;
+        }
+        
+        //2. gcs에서 삭제 + db삭제
+        for(FileDTO file :files) {
+        	try {
+        		String objectPath = file.getTarget_type()+"/"+file.getSysname();
+        		boolean deleted = storage.delete(BlobId.of(bucketName, objectPath));//gcs 삭제
+        		
+        		if(deleted) {
+        			dao.deleteFileBySysname(file.getSysname());//db 삭제
+        			System.out.println("gcs삭제 성공"+objectPath);
+        		}else {
+        			System.out.println("gcs삭제 실패"+objectPath);
+        		}
+        		
+        	}catch(Exception e) {
+        		e.printStackTrace();
+        	}
+        }
+        
+    }
 }

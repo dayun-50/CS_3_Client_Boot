@@ -17,4 +17,5 @@ public class CommentDTO {
     private int is_deleted;  // 삭제 여부
     private boolean is_reported; // 신고 횟수
     private Timestamp created_at; // 작성 날짜
+    private String comment_content;//댓글 내용
 }

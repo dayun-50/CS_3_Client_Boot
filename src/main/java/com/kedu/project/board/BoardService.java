@@ -70,5 +70,20 @@ public class BoardService {
     	return dao.postBoard(dto);
     }
     
+    //4.보드 디테일 가져오기
+    public Map<String, Object> getDetailBoard(int board_seq){
+    	Map<String, Object> params= new HashMap<>();
+    	params.put("board_seq",board_seq);
+    	return dao.getDetailBoard(params);
+    }
+    
+    //5. 보드 삭제
+    public int deleteTargetBoard(int board_seq, String user_id) {
+    	Map<String, Object> params= new HashMap<>();
+    	params.put("board_seq",board_seq);
+    	params.put("user_id",user_id);
+    	
+    	return dao.deleteTargetBoard(params);
+    }
     
 }

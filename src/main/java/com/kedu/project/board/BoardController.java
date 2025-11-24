@@ -1,6 +1,5 @@
 package com.kedu.project.board;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.kedu.project.config.PageNaviConfig;
 import com.kedu.project.file_info.FileDTO;
 import com.kedu.project.file_info.FileService;
@@ -46,11 +44,7 @@ public class BoardController {
     		@RequestParam(required=false) String target, //검색어
     		@AuthenticationPrincipal String id// 클라이언트 아이디
     		){
-    	System.out.println(page);
-    	System.out.println(board_type);
-    	System.out.println(target);
-    	System.out.println(id);
-    	
+    
     	
     	//0) 인증정보 조회
     	boolean is_privated=false;
@@ -111,26 +105,51 @@ public class BoardController {
     	//1.파일과 보드를 facade layer로 보내서 트랜잭셔널 처리 : BoardDTO로 묶어서 files랑 같이 보냄
     	// ** 나중에 진짜 아이디 넣어야 함
     	BoardDTO dto = BoardDTO.builder().user_id("test1").title(title).content(content).board_type(board_type).is_privated(is_privated).build();
-    	int target_seq=0;
-    	if(files!=null) {
-    		target_seq= boardFacadeService.postBoard(dto,files); //첨부파일 있으면 트랜잭션 처리
-    	}else {
-    		target_seq= boardService.postBoard(dto);//없으면 게시물만 올림
+    	int target_seq;
+
+    	if(files != null) {
+    	    target_seq = boardFacadeService.postBoard(dto,files);
+    	} else {
+    	    target_seq = boardService.postBoard(dto);
     	}
-    	
-    	//2. 이미지로 첨부된것 있는지 확인
+
     	fileService.confirmImg(imageSysListJson, target_seq);
-        
-//        System.out.println(thumbnail.getOriginalFilename());
-        //3.썸네일 있으면 저장
-        if (thumbnail != null && !thumbnail.isEmpty()) {
-            fileService.saveThumbnail(thumbnail,"board", target_seq, dto.getUser_id());
-        }
+
+    	if (thumbnail != null && !thumbnail.isEmpty()) {
+    	    fileService.saveThumbnail(thumbnail, "board", target_seq, dto.getUser_id());
+    	}
         
         return ResponseEntity.ok().build();
     }
     
+    //3. 보드 디테일 가져오기
+    @GetMapping("/detail")
+    public ResponseEntity  <Map<String, Object>> getDetailBoard(@RequestParam("seq") int board_seq,@AuthenticationPrincipal String id){
+    	System.out.println(board_seq+"디테일 도착");
+
+    	//1. 보드 dto 가져오기 + 보드쓴 사람 닉네임 가져오기
+    	Map<String, Object> result =boardService.getDetailBoard(board_seq);
+
+    	//2. 첨부파일들 싹가져오기
+    	List<FileDTO> files = fileService.getDetailBoardFile(board_seq, "board");
+    	
+    	
+    	//3. 클라이언트에게 보내기
+    	Map<String, Object> response = new HashMap<>();
+		response.put("boards", result);
+		response.put("files", files);
+		return ResponseEntity.ok(response);
+    }
     
     
+    //4. 보드 삭제하기
+    @DeleteMapping("/delete")
+    public ResponseEntity  <Void> deleteDetailBoard(@RequestParam("seq") int board_seq, @AuthenticationPrincipal String id){
+    	//나중에는 이거 지우기
+    	id="test1";
+    	
+    	boardFacadeService.deleteBoard(board_seq, id, "board");
+    	return ResponseEntity.ok().build();
+    }
     
 }

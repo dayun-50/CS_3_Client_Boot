@@ -8,7 +8,7 @@
 	<!--1. 보드 시퀀스로 썸네일 파일리스트 뽑아오기-->
     <select id="getThumsFromTo" resultType="com.kedu.project.file_info.FileDTO">
         select * from file_info
-        where target_type = 'thumbnail' and target_seq in
+        where target_type = 'board/thumb' and target_seq in
         <foreach collection="list" item="seq" open="(" separator="," close=")">
         	#{seq}
         </foreach>
@@ -40,19 +40,38 @@
 	</update>
 	<!--2-3. 썸네일 인서트-->
     <insert id="saveThumbnail" parameterType="com.kedu.project.file_info.FileDTO">
-	  insert into file_info (sysname, oriname, user_id, target_type, created_at)
-	  values (#{sysname}, #{oriname}, #{user_id}, #{target_type}, NOW())
+	  insert into file_info (sysname, oriname, user_id, target_type, target_seq, created_at)
+	  values (#{sysname}, #{oriname}, #{user_id}, #{target_type}, #{target_seq}, NOW())
 	</insert>
 	
 
 	<!--3. 시스네임으로 오리네임 찾기-->
-	<select id="findOriNameBySysName" resultType="String">
-		select oriname from file_info where sysname = #{sysname}
-		<foreach collection="list" item="file" separator=",">
-    		리스트 안의 시스네임과 같을때
-    	</foreach>
+	<select id="findOriNameBySysName" resultType="string">
+	    select oriname from file_info where sysname = #{sysname}
 	</select>
 	
 	
-
+	<!--3. 타겟 시퀀스+ 타겟 타입으로 해당하는 파일 배열 가져오기-->
+	<select id="getDetailBoardFile" resultType="com.kedu.project.file_info.FileDTO">
+	    select * from file_info where target_type = #{target_type} and target_seq = #{target_seq}
+	</select>
+	
+	<!--4.부모 시퀀스에 따라서 딸려있는 첨부파일+이미지들 전부 가져오기-->
+	<select id="getFilesByParent" parameterType="map" resultType="com.kedu.project.file_info.FileDTO">
+		select * from file_info where target_seq = #{target_seq} and user_id= #{user_id} and target_type like concat(#{target_type}, '%')
+	</select>
+	<!--4-1.부모 시퀀스에 따라서 딸려있느 첨부파일+이미지들 전부 지우기-->
+	<delete id="deleteAllFile">
+		delete from file_info where target_seq = #{target_seq} and user_id = #{user_id}
+	</delete>
+	
+	<!--5.created_at + target_seq 가 null인 파일 목록 가져오기 (새벽 4시 정리용)-->
+	<select id="getTempFiles" resultType="com.kedu.project.file_info.FileDTO">
+		select * from file_info where target_seq IS NULL or created_at IS NULL
+	</select>
+	
+	<!--6. sysname으로 삭제하기-->
+	<delete id="deleteFileBySysname">
+		delete from file_info where sysname = #{sysname}
+	</delete>
 </mapper>

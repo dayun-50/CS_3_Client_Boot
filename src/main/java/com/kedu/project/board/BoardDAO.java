@@ -41,8 +41,18 @@ public class BoardDAO {
     
     //4. 보드 작성
     public int postBoard(BoardDTO dto) {
-        return mybatis.insert("Board.postBoard", dto); 
+        mybatis.insert("Board.postBoard", dto);  // 반환값은 1 (행 개수)
+        return dto.getBoard_seq(); 
     }
-
+    
+    //5. 보드 디테일
+    public Map<String, Object> getDetailBoard(Map<String, Object> params){
+        return mybatis.selectOne("Board.getDetailBoard", params);
+    }
+    
+    //6. 보드 삭제
+    public int deleteTargetBoard(Map<String, Object> params){
+        return mybatis.delete("Board.deleteTargetBoard", params);
+    }
     
 }

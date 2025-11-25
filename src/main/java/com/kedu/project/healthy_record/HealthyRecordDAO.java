@@ -19,7 +19,15 @@ public class HealthyRecordDAO {
         return mybatis.delete("healthyRecor.delete", dto);
     }
 
-    public List<HealthyRecordDTO> selectList(HealthyRecordDTO dto){
-        return mybatis.selectList("healthyRecor.selectList",dto);
+    public List<HealthyRecordDTO> selectList(HealthyRecordDTO dto) {
+        return mybatis.selectList("healthyRecor.selectList", dto);
+    }
+
+    public List<HealthyRecordDTO> eventList(HealthyRecordDTO dto) {
+        return mybatis.selectList("healthyRecor.eventList", dto);
+    }
+
+    public int eventDelete(HealthyRecordDTO dto) {
+        return mybatis.update("healthyRecor.eventDelete", dto);
     }
 }

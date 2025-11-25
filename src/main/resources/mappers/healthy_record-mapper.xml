@@ -19,4 +19,18 @@
       select test_code, is_checked, created_at from healthy_record where baby_seq = #{baby_seq} and user_id = #{user_id}
     </select>
 
+    <select id="eventList" resultType="com.kedu.project.healthy_record.HealthyRecordDTO">
+      SELECT *
+      FROM healthy_record
+      WHERE baby_seq = #{baby_seq}
+        AND user_id = #{user_id}
+        AND is_checked = 'Y'
+        AND created_at BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) 
+                          AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+      ORDER BY created_at ASC
+    </select>
+
+    <update id="eventDelete">
+      update healthy_record set is_checked = 'N' where baby_seq = #{baby_seq} and user_id = #{user_id} and test_code = #{test_code}
+    </update>
 </mapper>

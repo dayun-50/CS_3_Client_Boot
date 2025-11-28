@@ -1,7 +1,6 @@
-package com.kedu.project.board.alarm;
+package com.kedu.project.comment.alarm;
 
 import java.util.Map;
-
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -28,21 +27,27 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 
         String token = null;
 
+        // WebSocket 연결 시 전달된 token 추출
         if (request instanceof ServletServerHttpRequest req) {
             token = req.getServletRequest().getParameter("token");
             System.out.println("WebSocket 연결 시도, token: " + token);
             System.out.println("클라이언트 주소: " + req.getRemoteAddress());
         }
 
+        // 토큰 검증
         if (token == null || !jwtUtil.validateToken(token)) {
             System.out.println("WebSocket 연결 실패: 유효하지 않은 토큰");
             return false;
         }
 
+        // 토큰에서 userId 추출 후 STOMP Principal로 세팅
         String userId = jwtUtil.getIdFromToken(token);
-        System.out.println("WebSocket 연결 성공, userId: " + userId);
+        StompPrincipal principal = new StompPrincipal(userId);
+        attributes.put("principal", principal);
 
-        attributes.put("principal", new StompPrincipal(userId));
+        // 디버그용 출력
+        System.out.println("WebSocket 연결 성공, Principal name: " + principal.getName());
+
         return true;
     }
 

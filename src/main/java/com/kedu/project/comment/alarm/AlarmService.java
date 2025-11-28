@@ -1,10 +1,9 @@
-package com.kedu.project.board.alarm;
+package com.kedu.project.comment.alarm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kedu.project.board.BoardDAO;
-import com.kedu.project.board.BoardDTO;
 import com.kedu.project.comment.CommentDAO;
 import com.kedu.project.comment.CommentDTO;
 

@@ -77,14 +77,14 @@ public class BabyService {
     
     
     
-    //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
-    public String babyDueDate(int baby_seq, String id) {
-    	String familyCode = userdao.familyCode(id);  	
-    	Map<String, Object> params = new HashMap<>();
-    	params.put("baby_seq", baby_seq);
-    	params.put("family_code", familyCode);
+    // //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
+    // public String babyDueDate(int baby_seq, String id) {
+    // 	String familyCode = userdao.familyCode(id);  	
+    // 	Map<String, Object> params = new HashMap<>();
+    // 	params.put("baby_seq", baby_seq);
+    // 	params.put("family_code", familyCode);
     	
-    	return dao.babyDueDate(params);
-    }
+    // 	return dao.babyDueDate(params);
+    // }
 
 }

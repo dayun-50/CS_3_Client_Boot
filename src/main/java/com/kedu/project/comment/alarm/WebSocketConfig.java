@@ -5,7 +5,6 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -19,15 +18,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws-stomp")
-                .setAllowedOriginPatterns("*") // 로컬 테스트시 *
+                .setAllowedOriginPatterns("http://10.5.5.4:3000") // React 앱 주소
                 .addInterceptors(jwtHandshakeInterceptor)
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/queue", "/topic");
+        registry.enableSimpleBroker("/queue");
         registry.setApplicationDestinationPrefixes("/pub");
-        registry.setUserDestinationPrefix("/user"); // convertAndSendToUser prefix
+        registry.setUserDestinationPrefix("/user");
     }
 }

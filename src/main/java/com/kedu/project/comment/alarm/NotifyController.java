@@ -3,6 +3,7 @@ package com.kedu.project.comment.alarm;
 import org.springframework.stereotype.Controller;
 import com.kedu.project.comment.CommentDTO;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 
 @Controller
@@ -17,12 +18,12 @@ public class NotifyController {
     }
 
     @MessageMapping("/notify")
-    public void handleNotify(CommentDTO dto, StompPrincipal principal) {
-        System.out.println("쓰는이 : "+dto.getUser_id());
+    public void handleNotify(CommentDTO dto) {
+        System.out.println("쓰는이 : "+dto);
         String writerId = alarmService.getWriterId(dto);
         System.out.println("받는이 : "+writerId);
 
-        if (writerId.equals(principal.getName())) return;
+        if (writerId.equals(dto.getUser_id())) return;
 
         AlarmDTO alarm = new AlarmDTO();
         alarm.setUser_id(writerId);
@@ -30,7 +31,7 @@ public class NotifyController {
         alarm.setComment_seq(String.valueOf(dto.getComment_seq()));
         alarm.setType("C");
 
-        System.out.println("알람 보내기: " + writerId + " -> " + alarm.getType());
+        System.out.println("알람 보내기: " + dto.getUser_id() + " -> " + alarm.getType());
 
         // 사용자 전용 알람
         messagingTemplate.convertAndSendToUser(writerId, "/queue/notify", alarm);

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="alarm">
+
+    <insert id="insertAlarm" useGeneratedKeys="true" keyProperty="alarm_seq">
+        INSERT INTO alarm (user_id, board_seq, comment_seq, type)
+        VALUES (#{user_id}, #{board_seq}, #{comment_seq}, #{type})
+    </insert>
+
+    <select id="getPendingAlarms" resultType="com.kedu.project.comment.alarm.AlarmDTO">
+        select * from alarm where user_id = #{user_id}
+    </select>
+
+    <delete id="deleteAlarm">
+        delete from alarm
+        where board_seq = #{board_seq}
+        <if test="comment_seq != null">
+            and comment_seq = #{comment_seq}
+        </if>
+        <if test="comment_seq == null">
+            and comment_seq is null
+        </if>
+    </delete>
+
+</mapper>

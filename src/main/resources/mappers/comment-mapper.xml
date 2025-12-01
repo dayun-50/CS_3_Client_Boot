@@ -61,6 +61,6 @@
 
 	<!-- 혜빈 추가 -->
 	<select id="getCommentWriterId" resultType="String">
-		select user_id from comment where user_id = #{user_id}
+		select user_id from comment where comment_seq = #{parent_comment_seq}
 	</select>
 </mapper>

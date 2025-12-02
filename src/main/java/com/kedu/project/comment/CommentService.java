@@ -7,12 +7,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kedu.project.board.BoardDAO;
+
 @Service
 public class CommentService {
     @Autowired
     private CommentDAO dao;
+    @Autowired
+    private BoardDAO boardDao;
     
-    //1. 보드 부모시퀀스+타입으로 댓글 전부 지우기
+    //1. 보드 부모시퀀스로 댓글 전부 지우기
     public int deleteAllComment (int board_seq) {
     	Map<String, Object> params = new HashMap<>();
     	params.put("board_seq", board_seq);
@@ -31,7 +35,10 @@ public class CommentService {
     //3. 댓글 작성
     public int postComment(CommentDTO dto, String id) {
     	dto.setUser_id(id);
-    	return dao.postComment(dto);
+    	int result = dao.postComment(dto);
+    	// 댓글 개수 → board.is_reported 에 반영
+    	boardDao.updateCommentCount(dto.getBoard_seq());
+    	return result;
     }
     
     //4. 댓글 삭제
@@ -58,12 +65,12 @@ public class CommentService {
     	
     	}else {//3. 해당 댓글이 자식 댓글일 경우
     		dao.strictDelete(comment_seq); //자식댓글은 바로 삭제하고
-    		
+    		System.out.println("ddd"+comment_seq);
     		Map params2 = new HashMap();
     		params2.put("comment_seq", targetdto.getParent_comment_seq());
-    		params2.put("user_id", user_id);
-    		CommentDTO parentdto = dao.findTargetDTO(params2); //부모 디티오 가져와서
-    		
+    		// params2.put("user_id", user_id);
+    		CommentDTO parentdto = dao.findTargetPDTO(params2); //부모 디티오 가져와서
+    		System.out.println("dddddddddd"+parentdto);
     		if(parentdto.getIs_deleted()==1){//부모 디티오의 is_delete가 1 이면
     			int childCount =dao.getChildCount(parentdto.getComment_seq());//남아있는 자식 댓글을 조회하고
     			
@@ -71,11 +78,8 @@ public class CommentService {
     				dao.strictDelete(parentdto.getComment_seq());
     			}
     		}
-    		
-    		
-    		
     	}
-    	
+    	boardDao.updateCommentCount(targetdto.getBoard_seq());
     }
     
     //5. 댓글 수정

@@ -3,10 +3,14 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test4">
+<mapper namespace="DailyRecord">
 
-    <select id="test4" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
-    </select>
+    <select id="getDailyRecord" resultType="com.kedu.project.daily_record.DailyRecordDTO">
+	    select *
+	    from daily_record
+	    where baby_seq = #{baby_seq}
+	      AND DATE(created_at) BETWEEN #{start} AND #{end}
+	    order by created_at
+	</select>
 
 </mapper>

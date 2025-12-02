@@ -7,12 +7,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kedu.project.board.BoardDAO;
+
 @Service
 public class CommentService {
     @Autowired
     private CommentDAO dao;
+    @Autowired
+    private BoardDAO boardDao;
     
-    //1. 보드 부모시퀀스+타입으로 댓글 전부 지우기
+    //1. 보드 부모시퀀스로 댓글 전부 지우기
     public int deleteAllComment (int board_seq) {
     	Map<String, Object> params = new HashMap<>();
     	params.put("board_seq", board_seq);
@@ -31,7 +35,10 @@ public class CommentService {
     //3. 댓글 작성
     public int postComment(CommentDTO dto, String id) {
     	dto.setUser_id(id);
-    	return dao.postComment(dto);
+    	int result = dao.postComment(dto);
+    	// 댓글 개수 → board.is_reported 에 반영
+    	boardDao.updateCommentCount(dto.getBoard_seq());
+    	return result;
     }
     
     //4. 댓글 삭제
@@ -71,9 +78,8 @@ public class CommentService {
     				dao.strictDelete(parentdto.getComment_seq());
     			}
     		}
-    		
     	}
-    	
+    	boardDao.updateCommentCount(targetdto.getBoard_seq());
     }
     
     //5. 댓글 수정

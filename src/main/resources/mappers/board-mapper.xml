@@ -118,6 +118,19 @@
 		update board set view_count = view_count +1
 		where board_seq = #{board_seq}
 	</update>
+	
+	<!--9. 댓글 개수-->
+	<update id="updateCommentCount">
+	    UPDATE board
+	    SET is_reported = (
+	        SELECT COUNT(*)
+	        FROM comment
+	        WHERE board_seq = #{board_seq}
+	          AND is_deleted = 0
+	    )
+	    WHERE board_seq = #{board_seq};
+	</update>
+	
 
 	<!-- 혜빈 추가 -->
 	<select id="getBoardWriterId" resultType="String">

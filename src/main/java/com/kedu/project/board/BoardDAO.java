@@ -67,6 +67,11 @@ public class BoardDAO {
     public int increaseViewCount(int board_seq) {
         return mybatis.update("Board.increaseViewCount", board_seq);
     }
+    
+    //9. 댓글수 세기
+    public int updateCommentCount(int board_seq) {
+        return mybatis.update("Board.updateCommentCount", board_seq);
+    }
 
     // 혜빈 추가
     public String getBoardWriterId(int board_seq) {

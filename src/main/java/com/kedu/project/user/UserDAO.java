@@ -1,5 +1,6 @@
 package com.kedu.project.user;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -59,9 +60,15 @@ public class UserDAO {
 
     public int changeBaby(UserDTO dto){
         return mybatis.update("user.changeBaby", dto);
+    }   
+    
+    //---------------------------------지원
+    public List<UserDTO> getMyfamily (String family_code){
+    	return mybatis.selectList("user.getMyfamily",family_code);
     }
-
+   
     public int secessionUser(String user_id){
         return mybatis.delete("user.secessionUser", user_id);
     }
+
 }

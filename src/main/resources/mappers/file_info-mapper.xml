@@ -61,8 +61,8 @@
 		select * from file_info where target_seq = #{target_seq} and user_id= #{user_id} and target_type like concat(#{target_type}, '%')
 	</select>
 	<!--4-1.부모 시퀀스에 따라서 딸려있느 첨부파일+이미지들 전부 지우기-->
-	<delete id="deleteAllFile">
-		delete from file_info where target_seq = #{target_seq} and user_id = #{user_id}
+	<delete id="deleteAllFile" parameterType="map">
+		delete from file_info where target_seq = #{target_seq} and user_id = #{user_id} AND target_type LIKE CONCAT(#{target_type}, '%')
 	</delete>
 	
 	<!--5.created_at + target_seq 가 null인 파일 목록 가져오기 (새벽 4시 정리용)-->

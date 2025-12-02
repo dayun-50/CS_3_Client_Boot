@@ -16,7 +16,7 @@ public class CommentService {
     @Autowired
     private BoardDAO boardDao;
     
-    //1. 보드 부모시퀀스+타입으로 댓글 전부 지우기
+    //1. 보드 부모시퀀스로 댓글 전부 지우기
     public int deleteAllComment (int board_seq) {
     	Map<String, Object> params = new HashMap<>();
     	params.put("board_seq", board_seq);

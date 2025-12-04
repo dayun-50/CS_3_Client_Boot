@@ -69,6 +69,7 @@
     WHERE baby_seq = #{baby_seq}
       AND user_id = #{user_id}
       AND measure_type = #{measure_type}
+      AND measure_date = #{created_at}
       
 </update>
 

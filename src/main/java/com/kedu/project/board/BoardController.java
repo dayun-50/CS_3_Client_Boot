@@ -107,6 +107,7 @@ public class BoardController {
         @RequestParam(value = "imageSysList", required = false) String imageSysListJson,
         @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
     ) {
+		System.out.println("작성"+id);
     	//1.파일과 보드를 facade layer로 보내서 트랜잭셔널 처리 : BoardDTO로 묶어서 files랑 같이 보냄
     	BoardDTO dto = BoardDTO.builder().user_id(id).title(title).content(content).board_type(board_type).is_privated(is_privated).build();
     	int target_seq;
@@ -132,7 +133,7 @@ public class BoardController {
     		@RequestParam("seq") int board_seq,
     		@AuthenticationPrincipal String id
     		){
-    	
+    	System.out.println("보기?"+id);
     	//0. 조회수 증가
     	boardService.increaseViewCount(board_seq);
 
@@ -149,6 +150,7 @@ public class BoardController {
     	//4. 클라이언트에게 보내기
     	Map<String, Object> response = new HashMap<>();
 		response.put("boards", result);
+		System.out.println("asdfasdf"+response.get("boards"));
 		response.put("files", files);
 		response.put("comments", comments);
 		return ResponseEntity.ok(response);

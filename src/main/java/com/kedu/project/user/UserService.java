@@ -1,5 +1,7 @@
 package com.kedu.project.user;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +62,7 @@ public class UserService {
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
         map.put("babySeq", babySeq);
-        map.put("babyDueDate",babydao.babyDueDate(familCode, babySeq));
+        map.put("babyDueDate", babydao.babyDueDate(familCode, babySeq));
 
         return map;
     }
@@ -86,7 +88,25 @@ public class UserService {
 
     public List<BabyDTO> babyListByMypage(String id) {
         String familyCode = dao.familyCode(id);
-        return babydao.babyListByMypage(familyCode);
+        List<BabyDTO> list = babydao.babyListByMypage(familyCode);
+        LocalDate today = LocalDate.now();
+        List<BabyDTO> result = new ArrayList<>();
+        for (BabyDTO baby : list) {
+            LocalDate birthDate = LocalDate.parse(baby.getBirth_date());
+            if (birthDate.isAfter(today)) {// 미래 날짜
+                if(!baby.getStatus().equals("fetus")){
+                    babydao.updateStatus(baby);
+                    baby.setStatus("fetus");
+                }
+            } else {// 오늘 포함 과거 날짜
+                if(!baby.getStatus().equals("infant")){
+                    babydao.updateStatus(baby);
+                    baby.setStatus("infant");
+                }
+            }
+            result.add(baby);
+        }
+        return result;
     }
 
     public int changeBaby(UserDTO dto) {
@@ -104,7 +124,7 @@ public class UserService {
         return healthyRecorddao.eventDelete(dto);
     }
 
-    public int secessionUser(String id){
+    public int secessionUser(String id) {
         return dao.secessionUser(id);
     }
 

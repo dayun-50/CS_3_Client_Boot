@@ -54,7 +54,7 @@ public class DailyRecordDAO {
                 "list", list));
     	return result;
     }
-  //4-1. 수면 그룹 삭제
+  //5. 수면 그룹 삭제
     public int deleteSleepGroup(String baby_seq, String group_id, String user_id) {
         return mybatis.delete("DailyRecord.deleteSleepGroup", Map.of(
             "baby_seq", baby_seq,
@@ -62,5 +62,13 @@ public class DailyRecordDAO {
             "user_id", user_id
         ));
     }
-
+    
+    // 5-1. 다른 데이터 삭제
+    public int deleteData(String baby_seq, String record_seq, String user_id) {
+    	return mybatis.delete("DailyRecord.deleteData", Map.of(
+                "baby_seq", baby_seq,
+                "record_seq", record_seq,
+                "user_id", user_id
+            ));
+    }
 }

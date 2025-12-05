@@ -133,14 +133,29 @@ public class DailyRecordController {
     }
     
     
+    //5.삭제 (수면그룹)
     @DeleteMapping("/sleep-group")
-    public ResponseEntity<?> deleteSleepGroup(
+    public ResponseEntity<Map <String, Object>> deleteSleepGroup(
         @RequestParam("baby_seq") String baby_seq,
         @RequestParam("group_id") String group_id,
         @AuthenticationPrincipal String id
     ) {
+    	System.out.println(group_id+": 그룹 시퀀스");
         int result = dailyRecordService.deleteSleepGroup(baby_seq, group_id, id);
         return ResponseEntity.ok(Map.of("result", result));
+    }
+    
+    //5-1. 삭제(일반그룹)
+    @DeleteMapping
+    public ResponseEntity<Map<String, Object>> deleteData(
+    		@RequestParam("baby_seq") String baby_seq,
+            @RequestParam("record_seq") String record_seq,
+            @AuthenticationPrincipal String id
+    		){
+    	System.out.println(record_seq+": 레코드 시퀀스");
+    	System.out.println(baby_seq+": 베비 시퀀스");
+    	int result = dailyRecordService.deleteData(baby_seq,record_seq, id);
+    	return ResponseEntity.ok(Map.of("result", result));
     }
     
     

@@ -32,6 +32,7 @@
 	      AND DATE(created_at) BETWEEN #{start} AND #{end}
 	    order by created_at
 	</select>-->
+	
 	<select id="getDailyRecord" resultType="com.kedu.project.daily_record.DailyRecordDTO">
 	    SELECT *
 	    FROM daily_record
@@ -78,15 +79,20 @@
 	    </foreach>
 	</update>
 	
-	<!-- 4-1 데이터 그룹아이디 따라 삭제 -->
+	<!-- 5 데이터 그룹아이디 따라 삭제 -->
 	<delete id="deleteSleepGroup">
 	    DELETE FROM daily_record
 	    WHERE baby_seq = #{baby_seq}
-	      AND sleep_group_id = #{group_id}
-	      AND user_id = #{user_id}
+	    AND sleep_group_id = #{group_id}
+	    AND user_id = #{user_id}
 	</delete>
 	
-
-		
+	<!--5.1 다른데이터 삭제-->
+	<delete id="deleteData">
+		DELETE FROM daily_record
+	    WHERE baby_seq = #{baby_seq}
+	    AND record_seq = #{record_seq}
+	    AND user_id = #{user_id}
+	</delete>		
 
 </mapper>

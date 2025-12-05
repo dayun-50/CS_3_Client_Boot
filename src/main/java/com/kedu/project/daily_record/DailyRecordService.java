@@ -126,7 +126,7 @@ public class DailyRecordService {
         }
     }
 
-    //4-1. 수면 그룹 삭제
+    //5. 수면 그룹 삭제
     public int deleteSleepGroup(String baby_seq, String group_id, String id) {
         //1. 내아기 맞는지 확인
         String familyCode = userdao.familyCode(id);
@@ -137,6 +137,22 @@ public class DailyRecordService {
 
         if(result != null) { // 아기가 유효하면
             return dao.deleteSleepGroup(baby_seq, group_id, id);
+        } else {
+            return 0;
+        }
+    }
+    
+    // 5-1. 데이터 삭제
+    public int deleteData(String baby_seq, String record_seq, String id) {
+    	//1. 내아기 맞는지 확인
+        String familyCode = userdao.familyCode(id);
+        BabyDTO bDto = new BabyDTO();
+        bDto.setBaby_seq(Integer.parseInt(baby_seq));
+        bDto.setFamily_code(familyCode);
+        BabyDTO result = babydao.babyMypage(bDto);
+        
+        if(result != null) { // 아기가 유효하면
+            return dao.deleteData(baby_seq, record_seq, id);
         } else {
             return 0;
         }

@@ -37,7 +37,7 @@ public class SecurityConfig {
                 auth.requestMatchers(
                     "/user/idChack", "/user/nicknameChack", "/user/signup",
                     "/user/login", "/user/pindIdByEmail", "/user/pindPwByEmail",
-                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**"
+                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**" ,"/article/**"
                 ).permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/board/**").permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/board/**").authenticated();
@@ -58,6 +58,7 @@ public class SecurityConfig {
         config.addAllowedOrigin("http://10.10.55.103:3000");
         config.addAllowedOrigin("http://10.5.5.4:3000");
         config.addAllowedOrigin("http://192.168.0.6:3000");
+        config.addAllowedOrigin("http://192.168.55.90:3000");       
         config.addAllowedOrigin("http://10.10.55.80:3000");
         config.addAllowedOrigin("http://10.10.55.89:3000");
         config.addAllowedOrigin("http://10.5.5.4:3001");

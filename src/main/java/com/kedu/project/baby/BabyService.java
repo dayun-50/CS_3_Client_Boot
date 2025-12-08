@@ -60,8 +60,12 @@ public class BabyService {
     }
 
     
-    public BabyDTO getBabyInfo(int babySeq) {
+    public BabyDTO getBabyInfo(int babySeq , String id) {
         // DAO를 호출하여 DB에서 BabyDTO를 조회합니다.
+    	 BabyDTO dto = new BabyDTO();
+         dto.setBaby_seq(babySeq);
+         String parentsData = userdao.familyCode(id);
+         dto.setFamily_code(parentsData);
         BabyDTO babyInfo = dao.selectBabyInfo(babySeq);
 
         if (babyInfo == null) {

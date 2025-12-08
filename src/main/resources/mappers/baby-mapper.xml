@@ -25,7 +25,7 @@
     <select id="selectBabyInfo" parameterType="int" resultType="com.kedu.project.baby.BabyDTO">
     SELECT baby_seq, gender, status, birth_date FROM 
         baby
-    WHERE 
+    WHERE family_code = #{family_code}
         baby_seq = #{babySeq}
 </select>
     

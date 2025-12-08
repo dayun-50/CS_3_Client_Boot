@@ -57,6 +57,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
             || path.startsWith("/file/")
             || path.startsWith("/emailCheck")
             || path.startsWith("/emailCheck/");
+    		
 
     if (permitWithoutAuth) {
         filterChain.doFilter(request, response);

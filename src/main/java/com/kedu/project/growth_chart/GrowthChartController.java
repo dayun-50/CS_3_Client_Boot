@@ -45,7 +45,7 @@ public class GrowthChartController {
 		// Service는 int를 사용하므로 Long으로 변환할 필요 없음
 		BabyDTO babyInfo = babyService.getBabyInfo(babySeq ,id); 
 
-		System.out.println(babyInfo);
+		System.out.println("최종으로"+babyInfo);
 
 		if (babyInfo == null) {
 			// DB에 아기가 없으면 404 NOT FOUND를 반환하여 안전하게 처리합니다.

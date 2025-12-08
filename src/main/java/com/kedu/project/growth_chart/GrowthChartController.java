@@ -36,8 +36,11 @@ public class GrowthChartController {
 
 	@GetMapping("/{babySeq}")
 
-	public ResponseEntity<BabyDTO> getBabyInfoForChart(@PathVariable int babySeq , @AuthenticationPrincipal String id) {
+	public ResponseEntity<BabyDTO> getBabyInfoForChart(
+			@PathVariable int babySeq , 
+			@AuthenticationPrincipal String id) {
 		System.out.println("아기 시퀀스"+babySeq);
+		System.out.println("ddddd"+id);
 		// BabyService를 호출하여 BabyDTO (status, birthDate) 반환
 		// Service는 int를 사용하므로 Long으로 변환할 필요 없음
 		BabyDTO babyInfo = babyService.getBabyInfo(babySeq ,id); 
@@ -55,31 +58,36 @@ public class GrowthChartController {
 	// total chart 데이터 조회
 
 	@GetMapping("/total")
-	public ResponseEntity<Map<String, Object>> getTotalChartData(
-			@RequestParam("babyId") int babyId,
-			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-		try {
-			System.out.println("도달했나요?"+ babyId);
-			// DB에서 주차 범위에 맞는 데이터 조회
-			Map<String, Object> actualDataMap = growthChartService.getActualDataByRange(babyId, startDate, endDate);
-			// 결과를 항상 0으로 채워서 반환할 최종 Map
-			Map<String, Float> resultMap = new LinkedHashMap<>();
-			LocalDate date = startDate;
-			int week = 1;
-			// 📌 기간 내 주차 Loop → 값 없다면 0으로 채움
-			while (!date.isAfter(endDate)) {
-				String weekKey = "Week " + week;
-				Float value = (Float) actualDataMap.getOrDefault(weekKey, 0f);
-				resultMap.put(weekKey, value);
-				date = date.plusDays(7);
-				week++;
-			}
-			return ResponseEntity.ok(actualDataMap);
+	public ResponseEntity<Map<String, Float>> getTotalChartData(
+	    @RequestParam("babyId") int babyId,
+	    @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+	    @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+	) {
+	    try {
+	        System.out.println("도달했나요?" + babyId);
 
-		} catch (Exception e) {
-			return ResponseEntity.internalServerError().body(null);
-		}
+	        Map<String, Object> actualDataMap =
+	            growthChartService.getActualDataByRange(babyId, startDate, endDate);
+
+	        Map<String, Float> resultMap = new LinkedHashMap<>();
+	        LocalDate date = startDate;
+	        int week = 1;
+
+	        while (!date.isAfter(endDate)) {
+	            String weekKey = "Week " + week;
+	            Float value = (Float) actualDataMap.getOrDefault(weekKey, 0f);
+	            resultMap.put(weekKey, value);
+	            date = date.plusDays(7);
+	            week++;
+	        }
+
+	        
+	        return ResponseEntity.ok(resultMap);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.internalServerError().body(null);
+	    }
 	}
 
 	@PostMapping("/insert")

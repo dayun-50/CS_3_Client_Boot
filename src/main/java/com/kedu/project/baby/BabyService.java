@@ -65,8 +65,11 @@ public class BabyService {
     	 BabyDTO dto = new BabyDTO();
          dto.setBaby_seq(babySeq);
          String parentsData = userdao.familyCode(id);
+         System.out.println("부모"+parentsData);
          dto.setFamily_code(parentsData);
-        BabyDTO babyInfo = dao.selectBabyInfo(babySeq);
+         dto.setBaby_seq(babySeq);
+        BabyDTO babyInfo = dao.selectBabyInfo(dto);
+        System.out.println("정보"+babyInfo);
 
         if (babyInfo == null) {
             // 정보가 없는 경우, 클라이언트가 에러 처리하도록 null을 반환합니다.

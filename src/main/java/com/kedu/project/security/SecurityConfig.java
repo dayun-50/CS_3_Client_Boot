@@ -39,8 +39,8 @@ public class SecurityConfig {
                     "/user/login", "/user/pindIdByEmail", "/user/pindPwByEmail",
                     "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**" ,"/article/**"
                 ).permitAll();
-                auth.requestMatchers(HttpMethod.GET, "/board/**").permitAll();
-                auth.requestMatchers(HttpMethod.POST, "/board/**").authenticated();
+                auth.requestMatchers(HttpMethod.GET, "/board/**" ).permitAll();
+                auth.requestMatchers(HttpMethod.POST, "/board/**", "/chart/**" ).authenticated();
                 // 나머지 요청은 모두 인증 필요
                 auth.anyRequest().authenticated();
             }); // 익명 접근 차단

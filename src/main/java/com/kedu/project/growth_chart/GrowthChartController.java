@@ -60,6 +60,7 @@ public class GrowthChartController {
 			@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 			@RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 		try {
+			System.out.println("도달했나요?"+ babyId);
 			// DB에서 주차 범위에 맞는 데이터 조회
 			Map<String, Object> actualDataMap = growthChartService.getActualDataByRange(babyId, startDate, endDate);
 			// 결과를 항상 0으로 채워서 반환할 최종 Map
@@ -83,7 +84,7 @@ public class GrowthChartController {
 
 	@PostMapping("/insert")
 	public ResponseEntity<?> insertGrowthData(@RequestBody List<GrowthChartDTO> dtoList) {
-		System.err.println("도달했나요?"+dtoList);
+		System.out.println("도달했나요?"+dtoList);
 		try {
 			growthChartService.insertGrowth(dtoList); // 내부에서 주차/중복 검증 포함
 			return ResponseEntity.ok().build();

@@ -20,7 +20,7 @@ public class GrowthChartService {
 	@Autowired
 	private GrowthChartDAO growthChartDAO;
 
-	private static final int MAX_DAYS_AGO = 30; // 잠깐 insert 하려고 바꿨어요
+	private static final int MAX_DAYS_AGO = 7; // 잠깐 insert 하려고 바꿨어요
 
 
 	@Transactional //  5개 DTO 중 하나라도 실패하면 전체 롤백

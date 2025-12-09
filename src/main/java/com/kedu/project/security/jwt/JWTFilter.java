@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.kedu.project.article.ArticleDTO;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
     String method = request.getMethod();
     String header = request.getHeader("Authorization");
 
+    
     // JWT가 존재하면 인증 정보 세팅
     if (header != null && header.startsWith("Bearer ")) {
         String token = header.substring(7);
@@ -56,7 +59,8 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
             || path.startsWith("/user/pindPwByEmail")
             || path.startsWith("/file/")
             || path.startsWith("/emailCheck")
-            || path.startsWith("/emailCheck/");
+            || path.startsWith("/emailCheck/")
+            || path.startsWith("/article/");
     		
 
     if (permitWithoutAuth) {

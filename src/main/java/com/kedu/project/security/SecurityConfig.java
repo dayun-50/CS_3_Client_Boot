@@ -14,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.kedu.project.article.ArticleDTO;
 import com.kedu.project.security.jwt.JWTFilter;
 
 @Configuration
@@ -26,6 +27,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+    	
+    	
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
@@ -37,7 +40,7 @@ public class SecurityConfig {
                 auth.requestMatchers(
                     "/user/idChack", "/user/nicknameChack", "/user/signup",
                     "/user/login", "/user/pindIdByEmail", "/user/pindPwByEmail",
-                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**" 
+                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**"
                 ).permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/board/**" ).permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/board/**" ).authenticated();

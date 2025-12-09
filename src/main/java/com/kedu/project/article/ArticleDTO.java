@@ -22,7 +22,35 @@ public class ArticleDTO {
     private String BIZ_CN; // 사업 내용 (키워드 필터링 대상)
     
     
-    public String getBIZ_ID() {
+    @JsonProperty("DEVIW_SITE_ADDR") 
+    private String DEVIW_SITE_ADDR;
+    
+    @JsonProperty("TRGT_CHILD_AGE") 
+    private String TRGT_CHILD_AGE;
+    
+    
+    
+    public String getTRGT_CHILD_AGE() {
+		return TRGT_CHILD_AGE;
+	}
+
+	public void setTRGT_CHILD_AGE(String TRGT_CHILD_AGE) {
+		this.TRGT_CHILD_AGE = TRGT_CHILD_AGE;
+	}
+
+	public String getDEVIW_SITE_ADDR() {
+		return DEVIW_SITE_ADDR;
+	}
+
+	public void setDEVIW_SITE_ADDR(String dEVIW_SITE_ADDR) {
+		this.DEVIW_SITE_ADDR = dEVIW_SITE_ADDR;
+	}
+
+	public void setBIZ_NM(String bIZ_NM) {
+		this.BIZ_NM = bIZ_NM;
+	}
+
+	public String getBIZ_ID() {
   		return BIZ_ID;
   	}
 

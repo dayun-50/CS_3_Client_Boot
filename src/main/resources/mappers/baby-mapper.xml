@@ -23,11 +23,12 @@
     </insert>
     
     <select id="selectBabyInfo" resultType="com.kedu.project.baby.BabyDTO">
-    SELECT baby_seq, gender, status, birth_date FROM 
-        baby
-    WHERE family_code = #{family_code} and
-        baby_seq = #{baby_seq}
-</select>
+	    SELECT baby_seq, gender, status, birth_date 
+	    FROM 
+	        baby
+	    WHERE 
+	        baby_seq = #{baby_seq} and family_code = #{family_code}
+	</select>
     
 
     <select id="babyListByMypage" resultType="com.kedu.project.baby.BabyDTO">

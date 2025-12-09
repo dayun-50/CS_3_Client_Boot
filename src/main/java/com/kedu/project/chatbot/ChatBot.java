@@ -1,5 +1,6 @@
 package com.kedu.project.chatbot;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,9 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ChatBotDataEntity {
+public class ChatBot {
     @Id
-    private int id;
-    private String trigger_text;
-    private String response_text;
+    private Integer id;
+    @Column(name = "trigger_text")
+    private String triggerText;
+    @Column(name = "response_text")
+    private String responseText;
 }
+

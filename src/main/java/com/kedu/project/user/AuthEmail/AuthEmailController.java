@@ -32,6 +32,6 @@ public class AuthEmailController {
         e.printStackTrace();
         System.out.println("메일관련 오류");
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("이메일 발송 중 오류가 발생했습니다.");
+                             .body("이메일 발송 중 오류가 발생했습니다. 오류 반복시 관리자에게 연락주세요.");
     }
 }
